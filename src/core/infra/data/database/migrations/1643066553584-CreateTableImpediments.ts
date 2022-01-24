@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 export class CreateTableImpediments1643066553584 implements MigrationInterface {
 
@@ -22,7 +22,7 @@ export class CreateTableImpediments1643066553584 implements MigrationInterface {
                     {
                         name: "description",
                         type: "varchar",
-                        length: "50",
+                        length: "100",
                         isNullable: false,
                     },
                     {
@@ -32,9 +32,9 @@ export class CreateTableImpediments1643066553584 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
-                        name: "end_date",
-                        type: "timestamp",
-                        isNullable: true,
+                        name: "uid_project",
+                        type: "uuid",
+                        isNullable: false,
                     },
                     {
                         name: "created_at",
@@ -47,11 +47,20 @@ export class CreateTableImpediments1643066553584 implements MigrationInterface {
                         isNullable: false,
                     },
                 ],
+                foreignKeys: [
+                    new TableForeignKey({
+                      name: "projects",
+                      columnNames: ["uid_projects"],
+                      referencedTableName: "projects",
+                      referencedColumnNames: ["uid"],
+                    }),
+                  ],
             })
         );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropTable("users", true, true, true);
     }
 
 }
