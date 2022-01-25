@@ -85,6 +85,16 @@ export class ProjectRepository {
     return this.mapperFromEntityToModel(projectUpdated);
   }
 
+  async destroy(uid: string): Promise<Project | undefined> {
+    const projectEntity = await ProjectEntity.findOne(uid);
+
+    if (!projectEntity) return undefined;
+
+    await ProjectEntity.remove(projectEntity);
+
+    return this.mapperFromEntityToModel(projectEntity);
+  }
+
   /**
    * Método privado (só é visivel dentro desta classe) que encapsula
    * a lógica de transformação de um objeto do tipo ProjectEntity

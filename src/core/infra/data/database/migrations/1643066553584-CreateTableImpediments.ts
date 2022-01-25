@@ -5,7 +5,7 @@ export class CreateTableImpediments1643066553584 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         return queryRunner.createTable(
             new Table({
-                name: "projects",
+                name: "impediments",
                 columns: [
                     {
                         name: "uid",
@@ -49,8 +49,8 @@ export class CreateTableImpediments1643066553584 implements MigrationInterface {
                 ],
                 foreignKeys: [
                     new TableForeignKey({
-                      name: "projects",
-                      columnNames: ["uid_projects"],
+                      name: "fk_impediments_projects",
+                      columnNames: ["uid_project"],
                       referencedTableName: "projects",
                       referencedColumnNames: ["uid"],
                     }),
@@ -60,7 +60,7 @@ export class CreateTableImpediments1643066553584 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("users", true, true, true);
+        await queryRunner.dropTable("impediments", true, true, true);
     }
 
 }
