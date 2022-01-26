@@ -32,6 +32,9 @@ export class GetOneImpedimentsController implements Controller {
 
       if (!impediment) return notFound(res);
 
+      // salva no redis para o dado ficar cacheado
+      await cache.set(`impediments:${impediment.uid}`, impediment);
+
       return ok(res, impediment);
     } catch (error: any) {
       return serverError(res, error);

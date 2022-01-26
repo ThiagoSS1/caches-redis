@@ -9,29 +9,33 @@ import {
 import { Impediments } from "../../domain/models/impediments";
 import { ImpedimentRepository } from "../../infra/repositories/impediments.repository";
 
-export class DeleteImpedimentsController implements Controller {
+export class GetAllImpedimentsController implements Controller {
   async handle(req: Request, res: Response): Promise<any> {
     try {
-      const { uid } = req.params;
-
+      // cria uma instância do repositório do cache
       const cache = new CacheRepository();
 
-      const ImpediemntsCache: Impediments = await cache.get(
-        `impediments:${uid}`
-      );
+      // busca os registro no cache
+      const impedimentsCache = await cache.get("impediments");
 
-      if (ImpediemntsCache) {
-        return ok(res, ImpediemntsCache);
+      // verifica se tem registro, caso verdadeiro, retorna do cache
+      if (impedimentsCache) {
+        return ok(
+          res,
+          (impedimentsCache as Impediments[]).map((impediment) => impediment)
+        );
       }
 
       const repository = new ImpedimentRepository();
-      const impediment = await repository.destroy(uid);
 
-      if (!impediment) return notFound(res);
+      const impediments = await repository.getAll();
 
-      await cache.delete(`impediments:${impediment.uid}`);
+      if (impediments.length === 0) return notFound(res);
 
-      return ok(res, impediment);
+      // salva no redis para servir de cache
+      await cache.set("impediments", impediments);
+
+      return ok(res, impediments);
     } catch (error: any) {
       return serverError(res, error);
     }
