@@ -16,20 +16,13 @@ export class DeleteImpedimentsController implements Controller {
 
       const cache = new CacheRepository();
 
-      const ImpediemntsCache: Impediments = await cache.get(
-        `impediments:${uid}`
-      );
-
-      if (ImpediemntsCache) {
-        return ok(res, ImpediemntsCache);
-      }
-
       const repository = new ImpedimentRepository();
       const impediment = await repository.destroy(uid);
 
       if (!impediment) return notFound(res);
 
-      await cache.delete(`impediments:${impediment.uid}`);
+      await cache.delete(`impediments:List`);
+      await cache.delete(`impediment:${uid}`);
 
       return ok(res, impediment);
     } catch (error: any) {

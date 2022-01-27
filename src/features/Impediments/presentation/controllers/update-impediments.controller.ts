@@ -20,8 +20,14 @@ export class UpdateImpedimentsController implements Controller {
       if (!impediments) return notFound(res);
 
       const cache = new CacheRepository();
-      await cache.delete("impediments");
       await cache.delete(`impediment:${uid}`);
+      const result = await cache.set(
+        `impediment:${impediments.uid}`,
+        impediments
+      );
+
+      if (!result) console.log("Nao salvou no cache do Redis");
+      await cache.delete("impediments:List");
 
       return ok(res, impediments);
     } catch (error: any) {

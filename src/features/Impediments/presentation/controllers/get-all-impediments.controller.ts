@@ -16,7 +16,7 @@ export class GetAllImpedimentsController implements Controller {
       const cache = new CacheRepository();
 
       // busca os registro no cache
-      const impedimentsCache = await cache.get("impediments");
+      const impedimentsCache = await cache.get("impediments:List");
 
       // verifica se tem registro, caso verdadeiro, retorna do cache
       if (impedimentsCache) {
@@ -33,7 +33,7 @@ export class GetAllImpedimentsController implements Controller {
       if (impediments.length === 0) return notFound(res);
 
       // salva no redis para servir de cache
-      await cache.set("impediments", impediments);
+      await cache.set(`impediments:List`, impediments);
 
       return ok(res, impediments);
     } catch (error: any) {

@@ -18,7 +18,7 @@ export class GetOneImpedimentsController implements Controller {
 
       // recupera o registro no cache
       const ImpedimentsCache: Impediments = await cache.get(
-        `impediments:${uid}`
+        `impediment:${uid}`
       );
 
       // verifica se encontrou e retorna caso verdadeiro
@@ -33,7 +33,7 @@ export class GetOneImpedimentsController implements Controller {
       if (!impediment) return notFound(res);
 
       // salva no redis para o dado ficar cacheado
-      await cache.set(`impediments:${impediment.uid}`, impediment);
+      await cache.set(`impediment:${impediment.uid}`, impediment);
 
       return ok(res, impediment);
     } catch (error: any) {

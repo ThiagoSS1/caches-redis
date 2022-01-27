@@ -2,6 +2,7 @@ import express, { Response, Request } from "express";
 import cors from "cors";
 import ProjectRoutes from "../../features/projects/presentation/routes/routes";
 import AuthenticationRoutes from "../../features/authentication/presentation/routes/routes";
+import ImpedimentsRoutes from "../../features/Impediments/presentation/routes/routes";
 
 /**
  * Éssa é a classe que é responsável por configurar a aplicação e iniciar o servidor
@@ -37,6 +38,9 @@ export default class App {
 
     const projectRoutes = new ProjectRoutes().init();
     this.#express.use(projectRoutes);
+
+    const impedimentsRoutes = new ImpedimentsRoutes().init();
+    this.#express.use(impedimentsRoutes);
 
     const authenticationRoutes = new AuthenticationRoutes().init();
     this.#express.use(authenticationRoutes);

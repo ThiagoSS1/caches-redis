@@ -16,14 +16,16 @@ export class CreateImpedimentsController implements Controller {
 
       const impediments = await repository.create(req.body);
 
+      // salvar o project no cache (redis)
       const result = await cache.set(
-        `Impediments: ${impediments.uid}`,
+        `impediment:${impediments.uid}`,
         impediments
       );
 
       if (!result) console.log("Nao salvou no cache do Redis");
 
-      await cache.delete("projects");
+      // limpa a lista de registros do redis, pois o cache está desatualizado neste momento
+      await cache.delete("impediments:List");
 
       return ok(res, impediments);
     } catch (error: any) {

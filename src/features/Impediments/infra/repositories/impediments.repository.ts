@@ -13,6 +13,7 @@ export class ImpedimentRepository {
     const impedimentsEntity = ImpedimentsEntity.create({
       title: data.title,
       description: data.description,
+      uidProject: data.uid_project,
     });
 
     await impedimentsEntity.save();
@@ -21,7 +22,7 @@ export class ImpedimentRepository {
 
   async getByUid(uid: string): Promise<Impediments | undefined> {
     const impedimentsEntity = await ImpedimentsEntity.findOne(uid, {
-      where: ["title", "description", "uid_project"],
+      select: ["uid", "title", "description", "uidProject"],
     });
     if (!impedimentsEntity) return undefined;
 
@@ -36,7 +37,9 @@ export class ImpedimentRepository {
     );
   }
 
-  async editImpediment(data: ImpedimentParams): Promise<Impediments | undefined> {
+  async editImpediment(
+    data: ImpedimentParams
+  ): Promise<Impediments | undefined> {
     const impedimentsEntity = await ImpedimentsEntity.findOne(data.uid);
 
     if (!impedimentsEntity) return undefined;
